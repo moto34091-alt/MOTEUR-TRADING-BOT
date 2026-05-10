@@ -1,4 +1,4 @@
-BOT_TOKEN = "YOUR_BOT_TOKEN"
+BOT_TOKEN = "8652341719:AAGIIkyqbVHNPYVUghPUn4MA_kIcrkyJfpM"
 
 POCKET_LINK = "https://pocket-friends.co/r/ffpccthlup"
 PROMO_CODE = "FRIENDFFPCCTHLUP"
