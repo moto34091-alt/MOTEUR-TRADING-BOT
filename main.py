@@ -4,7 +4,7 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, ContextTypes
 
 # 🔐 TOKEN (ENV)
-BOT_TOKEN = os.getenv("BOT_TOKEN")
+BOT_TOKEN = os.getenv("8652341719:AAGIIkyqbVHNPYVUghPUn4MA_kIcrkyJfpM")
 
 logging.basicConfig(level=logging.INFO)
 
