@@ -8,88 +8,183 @@ from telegram.ext import (
     ContextTypes
 )
 
-# 🔐 TOKEN (ENV)
+# 🔐 TOKEN
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
-# 📊 LOGS
 logging.basicConfig(level=logging.INFO)
 
 
 # =========================
-# 🚀 /start (INTERFACE)
+# 🧠 FAKE MARKET ENGINE (simulation)
+# =========================
+def get_market_data():
+
+    # 👉 ici tu peux remplacer par vraie API plus tard
+    return {
+        "ema9": 1,
+        "ema21": 0,
+        "rsi": 65,
+        "momentum": "strong",
+        "structure": "valid"
+    }
+
+
+# =========================
+# ⚡ SCORE ENGINE 100%
+# =========================
+def calculate_score(data):
+
+    score = 0
+
+    # EMA
+    if data["ema9"] > data["ema21"]:
+        score += 25
+
+    # RSI
+    if data["rsi"] > 60:
+        score += 25
+    elif data["rsi"] < 40:
+        score += 25
+
+    # MOMENTUM
+    if data["momentum"] == "strong":
+        score += 25
+
+    # STRUCTURE
+    if data["structure"] == "valid":
+        score += 25
+
+    return score
+
+
+# =========================
+# 🎯 /start MENU
 # =========================
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     keyboard = [
-        [InlineKeyboardButton("🟢 RECEVOIR DES SIGNAUX", callback_data="signals")],
-        [InlineKeyboardButton("📊 ANALYSE RAPIDE", callback_data="scan")],
-        [InlineKeyboardButton("⚡ MODE SNIPER 15S", callback_data="sniper")],
-        [InlineKeyboardButton("👑 CONTACT OWNER", url="https://t.me/Mr_dflam")]
+        [InlineKeyboardButton("🟢 ANALYSER SIGNAL", callback_data="analyze")],
+        [InlineKeyboardButton("📊 SCAN MARKET", callback_data="scan")],
+        [InlineKeyboardButton("⚡ MODE 100% SNIPER", callback_data="sniper")],
+        [InlineKeyboardButton("👑 CONTACT @Mr_dflam", url="https://t.me/Mr_dflam")]
     ]
 
-    reply_markup = InlineKeyboardMarkup(keyboard)
-
     await update.message.reply_text(
-"""🔵 SIGNAL SNIPER BOT
-⚡ Ultra Fast Trading Engine
+"""🔵 SIGNAL SNIPER AI
+⚡ Ultra Precision Engine
 
 📊 Market: EUR/USD OTC
-⏱ Mode: 15 SEC EXPIRY
+⏱ Mode: 15 SEC
 
-🧠 Status: READY
-⚡ AI Scan: ACTIVE
+🧠 STATUS: READY
 
-👑 Propriétaire : @Mr_dflam
-📩 Contact : @Mr_dflam
+👑 Propriétaire: @Mr_dflam
 
-⚠️ RISQUE ÉLEVÉ - TRADING OTC""",
-        reply_markup=reply_markup
+⚠️ ATTENTE SIGNAL 100%""",
+        reply_markup=InlineKeyboardMarkup(keyboard)
     )
 
 
 # =========================
-# 🎯 BOUTONS ACTIONS
+# 🎯 BUTTON LOGIC
 # =========================
 async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     query = update.callback_query
     await query.answer()
 
-    # 🟢 SIGNALS
-    if query.data == "signals":
-        await query.edit_message_text(
-"""🚨 SIGNAL SNIPER
+    # =========================
+    # 🧠 ANALYSE 100%
+    # =========================
+    if query.data == "analyze":
 
-📊 EUR/USD OTC
-🟢 DIRECTION: BUY
-⏱ EXPIRY: 15 SEC
-🧠 CONFIDENCE: 90%
+        data = get_market_data()
+        score = calculate_score(data)
 
-⚡ ENTRY NOW 🔥"""
-        )
+        # ⏳ WAIT CONDITION
+        if score < 100:
+            await query.edit_message_text(
+f"""🧠 ANALYSE EN COURS...
 
-    # 📊 SCAN
+📊 EMA: CHECKING
+📈 RSI: {data['rsi']}
+⚡ MOMENTUM: {data['momentum']}
+🧱 STRUCTURE: {data['structure']}
+
+📉 SCORE ACTUEL: {score}%
+
+⏳ ATTENTE SIGNAL 100%"""
+            )
+            return
+
+        # =========================
+        # ✅ SIGNAL BUY
+        # =========================
+        if data["ema9"] > data["ema21"]:
+
+            await query.edit_message_text(
+"""📊 EUR/USD OTC
+
+🧠 SIGNAL 100% CONFIRMÉ
+
+📈 TREND: HAUSSIER 🟢
+📊 RSI: VALID
+⚡ MOMENTUM: STRONG
+🧱 STRUCTURE: CONFIRMED
+
+🔥 POSITION: BUY NOW
+⏱ EXPIRY: 15 SEC"""
+            )
+
+        # =========================
+        # 🔴 SIGNAL SELL
+        # =========================
+        else:
+
+            await query.edit_message_text(
+"""📊 EUR/USD OTC
+
+🧠 SIGNAL 100% CONFIRMÉ
+
+📉 TREND: BAISSIER 🔴
+📊 RSI: VALID
+⚡ MOMENTUM: STRONG
+🧱 STRUCTURE: CONFIRMED
+
+🔥 POSITION: SELL NOW
+⏱ EXPIRY: 15 SEC"""
+            )
+
+
+    # =========================
+    # 📊 SCAN MARKET
+    # =========================
     elif query.data == "scan":
+
         await query.edit_message_text(
-"""🧠 SCAN MARKET
+"""📊 MARKET SCAN
 
-EUR/USD → BULLISH 🟢
-GBP/USD → BEARISH 🔴
-USD/JPY → NEUTRAL
+EUR/USD → ANALYSING...
+GBP/USD → ANALYSING...
+USD/JPY → ANALYSING...
 
-⚡ BEST OPPORTUNITY: EUR/USD BUY"""
+⏳ WAITING BEST SETUP"""
         )
 
-    # ⚡ SNIPER MODE
+
+    # =========================
+    # ⚡ MODE SNIPER
+    # =========================
     elif query.data == "sniper":
+
         await query.edit_message_text(
 """⚡ SNIPER MODE ACTIVE
 
-📊 15 SECONDS CANDLES ENABLED
-🧠 AI FILTERING: ON
-🚀 FAST SIGNAL ENGINE READY
+🧠 AI FILTER: 100% ONLY
+📊 SIGNAL QUALITY: MAXIMUM
+⏱ TIMEFRAME: 15 SEC
 
-⚡ WAITING FOR ENTRY..."""
+🔥 WAITING PERFECT ENTRY"""
         )
 
 
@@ -107,12 +202,9 @@ def main():
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CallbackQueryHandler(button_handler))
 
-    print("🤖 SIGNAL SNIPER BOT EN LIGNE...")
+    print("🤖 SNIPER AI 100% EN LIGNE...")
     app.run_polling(drop_pending_updates=True)
 
 
-# =========================
-# ▶️ START
-# =========================
 if __name__ == "__main__":
     main()
