@@ -1,6 +1,6 @@
 import os
 
-BOT_TOKEN = os.getenv("8652341719:AAGIIkyqbVHNPYVUghPUn4MA_kIcrkyJfpM", "")
+BOT_TOKEN = os.getenv("BOT_TOKEN", "")
 ADMIN_ID = 5161872804
 
 POCKET_LINK = "https://pocket-friends.co/r/ffpccthlup"
